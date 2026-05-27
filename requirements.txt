@@ -1,6 +1,8 @@
 streamlit
-tensorflow
+pandas
 numpy
 pillow
-pandas
-bcrypt
+opencv-python-headless
+tensorflow-cpu==2.15.0
+scikit-learn
+joblib
