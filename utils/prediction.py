@@ -1,4 +1,4 @@
-import tensorflow as tf
+from tflite_runtime.interpreter import Interpreter
 import numpy as np
 
 labels = [
@@ -12,7 +12,7 @@ labels = [
     "Milf"
 ]
 
-interpreter = tf.lite.Interpreter(
+interpreter = Interpreter(
     model_path="model.tflite"
 )
 
