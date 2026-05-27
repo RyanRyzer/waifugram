@@ -6,3 +6,4 @@ opencv-python-headless
 tf-nightly
 scikit-learn
 joblib
+bcrypt
