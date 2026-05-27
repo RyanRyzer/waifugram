@@ -23,7 +23,8 @@ from utils.prediction import (
 st.set_page_config(
     page_title="Waifugram AI",
     page_icon="🌸",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 if "logged_in" not in st.session_state:
@@ -47,12 +48,95 @@ footer {
 }
 
 header {
-    visibility:hidden;
+    background:transparent !important;
 }
 
+/* =========================
+HAMBURGER TOGGLE
+========================= */
+
 [data-testid="stSidebarNav"] {
-    display:none;
+    opacity:0;
+    height:0;
 }
+
+button[kind="header"] {
+    display:flex !important;
+}
+
+[data-testid="collapsedControl"] svg {
+    display:none !important;
+}
+
+[data-testid="collapsedControl"]::before {
+
+    content:"☰";
+
+    font-size:24px;
+
+    font-weight:700;
+
+    color:white;
+
+    line-height:1;
+}
+
+[data-testid="collapsedControl"] {
+
+    position:fixed !important;
+
+    top:14px !important;
+    left:14px !important;
+
+    width:48px !important;
+    height:48px !important;
+
+    border-radius:14px !important;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb
+    ) !important;
+
+    border:
+    1px solid rgba(255,255,255,0.08) !important;
+
+    display:flex !important;
+
+    align-items:center !important;
+
+    justify-content:center !important;
+
+    z-index:999999 !important;
+
+    transition:0.25s ease !important;
+
+    box-shadow:
+    0 8px 25px rgba(37,99,235,0.35) !important;
+
+    backdrop-filter:blur(10px);
+}
+
+[data-testid="collapsedControl"]:hover {
+
+    transform:scale(1.08);
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    ) !important;
+
+    box-shadow:
+    0 0 25px rgba(59,130,246,0.55) !important;
+}
+
+/* =========================
+GLOBAL
+========================= */
 
 .stApp {
 
@@ -85,6 +169,10 @@ section[data-testid="stSidebar"] {
 section[data-testid="stSidebar"] * {
     color:white;
 }
+
+/* =========================
+TITLE
+========================= */
 
 .sidebar-title {
 
@@ -134,6 +222,10 @@ section[data-testid="stSidebar"] * {
 
     margin-bottom:40px;
 }
+
+/* =========================
+CARD
+========================= */
 
 .auth-card {
 
@@ -195,6 +287,10 @@ section[data-testid="stSidebar"] * {
     0 0 30px rgba(59,130,246,0.15);
 }
 
+/* =========================
+INPUT
+========================= */
+
 .stTextInput input {
 
     background:#0f172a !important;
@@ -212,6 +308,10 @@ section[data-testid="stSidebar"] * {
 .stTextInput label {
     color:white !important;
 }
+
+/* =========================
+BUTTON
+========================= */
 
 .stButton > button {
 
@@ -245,6 +345,10 @@ section[data-testid="stSidebar"] * {
     0 0 25px rgba(59,130,246,0.35);
 }
 
+/* =========================
+TABS
+========================= */
+
 div[data-baseweb="tab-list"] {
 
     gap:20px;
@@ -272,6 +376,10 @@ button[data-baseweb="tab"][aria-selected="true"] {
     );
 }
 
+/* =========================
+PROGRESS
+========================= */
+
 .stProgress > div > div {
 
     background:
@@ -281,6 +389,10 @@ button[data-baseweb="tab"][aria-selected="true"] {
         #3b82f6
     );
 }
+
+/* =========================
+SIDEBAR BUTTON
+========================= */
 
 .sidebar-btn button {
 
@@ -401,6 +513,7 @@ if not st.session_state.logged_in:
                     st.rerun()
 
                 else:
+
                     st.error(
                         "Username atau password salah"
                     )
@@ -596,7 +709,6 @@ else:
         for category in labels:
 
             st.write(category)
-
             st.progress(75)
 
     elif menu == "AI Detection":
@@ -716,12 +828,6 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown("""
-        <div class='sub-title'>
-            Your Previous AI Predictions
-        </div>
-        """, unsafe_allow_html=True)
-
         cursor.execute(
             """
             SELECT prediction,
@@ -743,14 +849,8 @@ else:
             for row in rows:
 
                 prediction = row[0]
-
                 confidence = row[1]
-
                 image_path = row[2]
-
-                st.markdown("""
-                <div style='margin-bottom:25px;'>
-                """, unsafe_allow_html=True)
 
                 col1, col2 = st.columns([1,2])
 
@@ -766,109 +866,29 @@ else:
                 with col2:
 
                     st.markdown(f"""
-                    <div style='
-                    background:rgba(255,255,255,0.04);
-                    border:1px solid rgba(255,255,255,0.06);
-                    border-radius:24px;
-                    padding:35px;
-                    min-height:250px;
-                    backdrop-filter:blur(10px);
-                    display:flex;
-                    flex-direction:column;
-                    justify-content:center;
-                    '>
+                    <div class='card'>
 
-                    <h1 style='
-                    color:white;
-                    margin-bottom:20px;
-                    font-size:42px;
-                    '>
+                    <h1>
                     🌸 {prediction}
                     </h1>
 
-                    <div style='
-                    margin-top:10px;
-                    margin-bottom:15px;
-                    '>
+                    <br>
 
-                    <span style='
-                    font-size:18px;
-                    color:#cbd5e1;
-                    '>
-                    Confidence Score
-                    </span>
-
-                    </div>
-
-                    <div style='
-                    width:100%;
-                    height:18px;
-                    background:rgba(255,255,255,0.08);
-                    border-radius:30px;
-                    overflow:hidden;
-                    margin-bottom:15px;
-                    '>
-
-                        <div style='
-                        width:{confidence}%;
-                        height:100%;
-                        background:
-                        linear-gradient(
-                            90deg,
-                            #2563eb,
-                            #60a5fa
-                        );
-                        border-radius:30px;
-                        '>
-                        </div>
-
-                    </div>
-
-                    <h2 style='
-                    color:#60a5fa;
-                    margin-top:5px;
-                    '>
+                    <h3>
+                    Confidence:
                     {confidence:.2f}%
-                    </h2>
+                    </h3>
 
                     </div>
                     """, unsafe_allow_html=True)
 
-                st.markdown("""
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown("<br>", unsafe_allow_html=True)
 
         else:
 
-            st.markdown("""
-            <div style='
-            background:rgba(255,255,255,0.04);
-            border:1px solid rgba(255,255,255,0.06);
-            border-radius:24px;
-            padding:60px;
-            text-align:center;
-            margin-top:40px;
-            '>
-
-            <h1 style='font-size:70px;'>
-            📂
-            </h1>
-
-            <h2 style='color:white;'>
-            No Prediction History
-            </h2>
-
-            <p style='
-            color:#cbd5e1;
-            margin-top:10px;
-            font-size:18px;
-            '>
-            Upload anime images first
-            to see prediction history here.
-            </p>
-
-            </div>
-            """, unsafe_allow_html=True)
+            st.warning(
+                "Belum ada history prediction"
+            )
 
     elif menu == "About":
 
